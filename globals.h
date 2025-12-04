@@ -8,6 +8,8 @@ typedef struct
 {
 	unsigned maxFps;
 	unsigned frameCounter; // counts up to 'max fps'
+	bool simulate; //if simulate - should sand start falling
+	unsigned color; // color of newly created sand
 	DrawingArea* drawingArea;
 	Sand* sand;
 	OptionParser* options;
