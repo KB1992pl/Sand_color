@@ -50,7 +50,7 @@ static void init(char* argv[])
     float width{ mainRes.options->screenWidth * 0.8f };
     float height{ mainRes.options->screenHeight * 0.9f };
     mainRes.maxFps = fps;
-    mainRes.color = 1;
+    mainRes.color = RED;
     mainRes.simulate = false;
     mainRes.drawingArea = new DrawingArea(upperRightDrawingArea, height, width);
     mainRes.sand = new Sand(upperRightDrawingArea, height, width);
@@ -72,15 +72,15 @@ static void processInput()
     }
     if (IsKeyPressed(KEY_ONE))
     {
-        mainRes.color = 1;
+        mainRes.color = BLUE;
     }
     if (IsKeyPressed(KEY_TWO))
     {
-        mainRes.color = 2;
+        mainRes.color = RED;
     }
     if (IsKeyPressed(KEY_THREE))
     {
-        mainRes.color = 3;
+        mainRes.color = GREEN;
     }
     if (IsKeyPressed(KEY_R))
     {
