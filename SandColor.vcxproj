@@ -139,6 +139,7 @@
     <ClInclude Include="src\file_parsers\optionParser.h" />
     <ClInclude Include="src\sand\sand.h" />
     <ClInclude Include="src\ui\ui.h" />
+    <ClInclude Include="src\utils.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -1,16 +1,17 @@
 #include "sand.h"
 #include <math.h>
+#include <cstdlib>
+#include "../utils.h"
 
 Sand::Sand(Vector2 upperRight, float height, float width)
 {
 	this->rowCount = (unsigned)height;
 	this->colCount = (unsigned)width;
-	this->table = new unsigned* [(unsigned)height];
+	this->table = new Color * [(unsigned)height];
 	for (unsigned ii = 0; ii < height; ii++)
 	{
-		table[ii] = new unsigned[(unsigned)width];
+		table[ii] = new Color[(unsigned)width];
 	}
-
 	this->upperRight = upperRight;
 	this->lowerLeft.x = this->upperRight.x + width;
 	this->lowerLeft.y = this->upperRight.y + height;
@@ -27,8 +28,10 @@ Sand::~Sand()
 	delete []this->table;
 }
 
-void Sand::generateSand(Vector2 position, unsigned color, int radius)
+void Sand::generateSand(Vector2 position, Color color, int radius)
 {
+	Color outputColor;
+	int rDelta, gDelta, bDelta, aDelta=0;
 	if (radius == 0)
 	{
 		return;
@@ -49,6 +52,7 @@ void Sand::generateSand(Vector2 position, unsigned color, int radius)
 	{
 		for (int ii = -radius; ii < radius + 1; ii++)
 		{
+			
 			if ((ii + x < 0) || (ii + x > (this->colCount - 1)))
 			{
 				continue;
@@ -59,7 +63,16 @@ void Sand::generateSand(Vector2 position, unsigned color, int radius)
 				{
 					continue;
 				}
-				table[jj+y][ii+x] = color;
+				const int MAXRAND = 30;
+				int random= (rand() % MAXRAND) - MAXRAND / 2;
+				outputColor = color;
+				outputColor.r = static_cast<unsigned char>(addWithSaturation(outputColor.r, random, 255));
+				random = (rand() % MAXRAND) - MAXRAND / 2;
+				outputColor.g = static_cast<unsigned char>(addWithSaturation(outputColor.g, random, 255));
+				random = (rand() % MAXRAND) - MAXRAND / 2;
+				outputColor.b = static_cast<unsigned char>(addWithSaturation(outputColor.b, random, 255));
+
+				table[jj+y][ii+x] = outputColor;
 			}
 		}
 	}
@@ -70,29 +83,29 @@ void Sand::simulate()
 	{
 		for (unsigned col = 0; col < this->colCount; col++)
 		{
-			if (this->table[row][col])
+			if (this->table[row][col].a!=0)
 			{
-				if (this->table[row + 1][col] == 0)
+				if (this->table[row + 1][col].a == 0)
 				{
 					this->table[row + 1][col] = this->table[row][col];
-					this->table[row][col] = 0;
+					this->table[row][col].a = 0;
 					continue;
 				}
 				if (col > 0)
 				{
-					if ((this->table[row + 1][col-1] == 0))
+					if ((this->table[row + 1][col-1].a == 0))
 					{
 						this->table[row + 1][col - 1] = this->table[row][col];
-						this->table[row][col] = 0;
+						this->table[row][col].a = 0;
 						continue;
 					}
 				}
 				if (col < this->colCount - 1)
 				{
-					if ((this->table[row + 1][col +1] == 0))
+					if ((this->table[row + 1][col +1].a == 0))
 					{
 						this->table[row + 1][col + 1] = this->table[row][col];
-						this->table[row][col] = 0;
+						this->table[row][col].a = 0;
 						continue;
 					}
 				}
@@ -110,19 +123,9 @@ void Sand::render()
 	{
 		for (unsigned col = 0; col < this->colCount; col++)
 		{
-			if (this->table[row][col])
+			if (this->table[row][col].a)
 			{
-
-				Color color = BLUE;
-
-				if (this->table[row][col] == 2)
-				{
-					color = RED;
-				}
-				else if (this->table[row][col] == 3)
-				{
-					color = GREEN;
-				}
+				Color color{ this->table[row][col] };
 				this->pixels++;
 				DrawPixel(xOffset + col, yOffset+ row, color);
 			}
@@ -136,7 +139,7 @@ void Sand::resetTable()
 	{
 		for (unsigned col = 0; col < this->colCount; col++)
 		{
-			this->table[row][col] = 0;
+			this->table[row][col].a = 0;
 		}
 	}
 }
