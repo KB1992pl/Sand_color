@@ -1,4 +1,5 @@
 #include "sand.h"
+#include <math.h>
 
 Sand::Sand(Vector2 upperRight, float height, float width)
 {
@@ -14,13 +15,7 @@ Sand::Sand(Vector2 upperRight, float height, float width)
 	this->lowerLeft.x = this->upperRight.x + width;
 	this->lowerLeft.y = this->upperRight.y + height;
 
-	for (unsigned row = 0; row < this->rowCount; row++)
-	{
-		for (unsigned col = 0; col < this->colCount; col++)
-		{
-			this->table[row][col] = 0;
-		}
-	}
+	this->resetTable();
 }
 
 Sand::~Sand()
@@ -32,12 +27,42 @@ Sand::~Sand()
 	delete []this->table;
 }
 
-void Sand::generateSand(Vector2 position, unsigned color, unsigned size)
+void Sand::generateSand(Vector2 position, unsigned color, int radius)
 {
-	const unsigned x = static_cast<unsigned>(position.x - this->upperRight.x);
-	const unsigned y = static_cast<unsigned>(position.y - this->upperRight.y);
+	if (radius == 0)
+	{
+		return;
+	}
+	const int x = static_cast<int>(position.x - this->upperRight.x);
+	const int y = static_cast<int>(position.y - this->upperRight.y);
 
-	table[y][x] = color;
+	if (radius == 1)
+	{
+		if ((y >= this->rowCount) || (x >= this->colCount))
+		{
+			return;
+		}
+		table[y][x] = color;
+	}
+	//
+	else
+	{
+		for (int ii = -radius; ii < radius + 1; ii++)
+		{
+			if ((ii + x < 0) || (ii + x > (this->colCount - 1)))
+			{
+				continue;
+			}
+			for (int jj = -radius + abs(ii); jj < radius - abs(ii) + 1; jj++)
+			{
+				if ((jj + y < 0) || (jj + y > (this->rowCount - 1)))
+				{
+					continue;
+				}
+				table[jj+y][ii+x] = color;
+			}
+		}
+	}
 }
 void Sand::simulate()
 {
@@ -78,6 +103,7 @@ void Sand::simulate()
 
 void Sand::render()
 {
+	this->pixels = 0;
 	const unsigned xOffset = static_cast<unsigned>(this->upperRight.x);
 	const unsigned yOffset = static_cast<unsigned>(this->upperRight.y);
 	for (unsigned row = 0; row < this->rowCount; row++)
@@ -97,9 +123,20 @@ void Sand::render()
 				{
 					color = GREEN;
 				}
-				
+				this->pixels++;
 				DrawPixel(xOffset + col, yOffset+ row, color);
 			}
+		}
+	}
+}
+
+void Sand::resetTable()
+{
+	for (unsigned row = 0; row < this->rowCount; row++)
+	{
+		for (unsigned col = 0; col < this->colCount; col++)
+		{
+			this->table[row][col] = 0;
 		}
 	}
 }

@@ -13,8 +13,11 @@ private:
 public:
 	Sand(Vector2 upperRight, float height, float width);
 	~Sand();
-	void generateSand(Vector2 position, unsigned color, unsigned size);
+	void generateSand(Vector2 position, unsigned color, int size);
 	void simulate();
+	void resetTable();
+	void fillTable();
 	virtual void render();
 	virtual bool isMouseOnObj(Vector2 mouseCoords) { return false; };
+	long pixels;
 };

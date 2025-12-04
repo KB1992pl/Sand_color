@@ -1,13 +1,13 @@
 #include <raylib.h>
 #include "globals.h"
+#include<string>
 
 MainRes_t mainRes; // global container for stuff
 static void init(char* argv[]);
+static void processInput();
 
 int main(int argc, char* argv[])
 {
-    bool simulate = false;
-    unsigned color = 1;
     init(argv);
     SetTargetFPS(60);
 	InitWindow(mainRes.options->screenWidth, mainRes.options->screenHeight, "kolorki.");
@@ -19,57 +19,22 @@ int main(int argc, char* argv[])
     while (!WindowShouldClose())    // Detect window close button or ESC key
     {
         mainRes.frameCounter = (mainRes.frameCounter + 1) % mainRes.maxFps;
-
-        //process input
-        if (IsKeyPressed(KEY_SPACE))
-        {
-            if (simulate)
-            {
-                simulate = false;
-            }
-            else
-            {
-                simulate = true;
-            }
-        }
-        if (IsKeyPressed(KEY_ONE))
-        {
-            color = 1;
-        }
-        if (IsKeyPressed(KEY_TWO))
-        {
-            color = 2;
-        }
-        if (IsKeyPressed(KEY_THREE))
-        {
-            color = 3;
-        }
-        if (IsMouseButtonDown(MOUSE_BUTTON_LEFT))
-        {
-            const Vector2 mousePosition = GetMousePosition();
-            //check if mouse is in drawing range
-            if (mainRes.drawingArea->isMouseOnObj(mousePosition))
-            {
-                mainRes.sand->generateSand(mousePosition, color,1);
-            }
-            //else if (mainRes.ui->isMouseOnObj(mousePosition))
-            {
-
-            }
-        }
-        // end processing input
-
+        processInput();
         //simulate
-        if (simulate)
+        if (mainRes.simulate)
         {
             mainRes.sand->simulate();
         }
         //end simulate
+        
         BeginDrawing();
+        ClearBackground(RAYWHITE);
+        mainRes.sand->render();
         mainRes.ui->render();
         mainRes.drawingArea->render();
-        mainRes.sand->render();
-        ClearBackground(RAYWHITE);
+        DrawText((std::to_string(mainRes.sand->pixels).c_str()), mainRes.options->screenWidth - 80, mainRes.options->screenHeight - 50,
+            16, BLACK);
+        
 
         EndDrawing();
         //----------------------------------------------------------------------------------
@@ -85,8 +50,53 @@ static void init(char* argv[])
     float width{ mainRes.options->screenWidth * 0.8f };
     float height{ mainRes.options->screenHeight * 0.9f };
     mainRes.maxFps = fps;
+    mainRes.color = 1;
+    mainRes.simulate = false;
     mainRes.drawingArea = new DrawingArea(upperRightDrawingArea, height, width);
     mainRes.sand = new Sand(upperRightDrawingArea, height, width);
     mainRes.ui = new Ui(upperRightUi, height, mainRes.options->screenWidth * 0.08f);
-    
+}
+
+static void processInput()
+{
+    if (IsKeyPressed(KEY_SPACE))
+    {
+        if (mainRes.simulate)
+        {
+            mainRes.simulate = false;
+        }
+        else
+        {
+            mainRes.simulate = true;
+        }
+    }
+    if (IsKeyPressed(KEY_ONE))
+    {
+        mainRes.color = 1;
+    }
+    if (IsKeyPressed(KEY_TWO))
+    {
+        mainRes.color = 2;
+    }
+    if (IsKeyPressed(KEY_THREE))
+    {
+        mainRes.color = 3;
+    }
+    if (IsKeyPressed(KEY_R))
+    {
+        mainRes.sand->resetTable();
+    }
+    if (IsMouseButtonDown(MOUSE_BUTTON_LEFT))
+    {
+        const Vector2 mousePosition = GetMousePosition();
+        //check if mouse is in drawing range
+        if (mainRes.drawingArea->isMouseOnObj(mousePosition))
+        {
+            mainRes.sand->generateSand(mousePosition, mainRes.color, 8);
+        }
+        else if (mainRes.ui->isMouseOnObj(mousePosition))
+        {
+            //handle UI clicks
+        }
+    }
 }
