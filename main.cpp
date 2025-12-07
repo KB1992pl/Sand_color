@@ -96,7 +96,8 @@ static void processInput()
         }
         else if (mainRes.ui->isMouseOnObj(mousePosition))
         {
-            //handle UI clicks
+            mainRes.ui->getColorFromGradient(mousePosition, &mainRes.color);
+            mainRes.ui->getBlackFromGradient(mousePosition, &mainRes.color);
         }
     }
 }
