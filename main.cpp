@@ -18,7 +18,6 @@ var=  miliseconds.count();
 
 #endif //DEBUG_PRINT
 
-
 MainRes_t mainRes; // global container for stuff
 static void init(char* argv[]);
 static void processInput();
@@ -53,6 +52,7 @@ int main(int argc, char* argv[])
         mainRes.drawingArea->render();
         DrawText((std::to_string(mainRes.sand->pixels).c_str()), mainRes.options->screenWidth - 80, mainRes.options->screenHeight - 50,
             16, BLACK);
+
 #if DEBUG_PRINT
         DrawText(std::to_string(renderTime).c_str(), 80, mainRes.options->screenHeight - 40, 16, BLACK);
         DrawText(std::to_string(simulationTime).c_str(), 80, mainRes.options->screenHeight - 80, 16, BLACK);
@@ -94,15 +94,15 @@ static void processInput()
     }
     if (IsKeyPressed(KEY_ONE))
     {
-        mainRes.color = BLUE;
+        mainRes.sand->generateSand({ 0,0 }, mainRes.color, 500);
     }
     if (IsKeyPressed(KEY_TWO))
     {
-        mainRes.color = RED;
+        mainRes.sand->generateSand({ 0,0 }, mainRes.color, 1000);
     }
     if (IsKeyPressed(KEY_THREE))
     {
-        mainRes.color = GREEN;
+        mainRes.sand->generateSand({ 0,0 }, mainRes.color, 2000);
     }
     if (IsKeyPressed(KEY_R))
     {
