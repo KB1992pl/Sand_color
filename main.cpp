@@ -2,12 +2,30 @@
 #include "globals.h"
 #include<string>
 
+#define DEBUG_PRINT 1
+
+#if DEBUG_PRINT
+#include<chrono>
+//macro to calculate execution time of given function
+#define execFunctionWithTimeMeasure(f, var) \
+auto startTime = std::chrono::high_resolution_clock::now();\
+f;\
+std::chrono::duration<double, std::milli> miliseconds = std::chrono::high_resolution_clock::now() - startTime;\
+var=  miliseconds.count();
+
+#else //DEBUG_PRINT
+#define execFunctionWithTimeMeasure(f, var) f
+
+#endif //DEBUG_PRINT
+
 MainRes_t mainRes; // global container for stuff
 static void init(char* argv[]);
 static void processInput();
 
+
 int main(int argc, char* argv[])
 {
+    double simulationTime{0.0}, renderTime{ 0.0 }; //debug variables
     init(argv);
     SetTargetFPS(60);
 	InitWindow(mainRes.options->screenWidth, mainRes.options->screenHeight, "kolorki.");
@@ -23,18 +41,22 @@ int main(int argc, char* argv[])
         //simulate
         if (mainRes.simulate)
         {
-            mainRes.sand->simulate();
+            execFunctionWithTimeMeasure(mainRes.sand->simulate(), simulationTime);
         }
         //end simulate
         
         BeginDrawing();
         ClearBackground(RAYWHITE);
-        mainRes.sand->render();
+        execFunctionWithTimeMeasure(mainRes.sand->render() , renderTime);
         mainRes.ui->render();
         mainRes.drawingArea->render();
         DrawText((std::to_string(mainRes.sand->pixels).c_str()), mainRes.options->screenWidth - 80, mainRes.options->screenHeight - 50,
             16, BLACK);
-        
+
+#if DEBUG_PRINT
+        DrawText(std::to_string(renderTime).c_str(), 80, mainRes.options->screenHeight - 40, 16, BLACK);
+        DrawText(std::to_string(simulationTime).c_str(), 80, mainRes.options->screenHeight - 80, 16, BLACK);
+#endif //DEBUG_PRINT
 
         EndDrawing();
         //----------------------------------------------------------------------------------
@@ -72,15 +94,15 @@ static void processInput()
     }
     if (IsKeyPressed(KEY_ONE))
     {
-        mainRes.color = BLUE;
+        mainRes.sand->generateSand({ 0,0 }, mainRes.color, 500);
     }
     if (IsKeyPressed(KEY_TWO))
     {
-        mainRes.color = RED;
+        mainRes.sand->generateSand({ 0,0 }, mainRes.color, 1000);
     }
     if (IsKeyPressed(KEY_THREE))
     {
-        mainRes.color = GREEN;
+        mainRes.sand->generateSand({ 0,0 }, mainRes.color, 2000);
     }
     if (IsKeyPressed(KEY_R))
     {
