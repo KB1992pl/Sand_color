@@ -6,8 +6,8 @@ class SandBlock :public DrawableObj
 {
 private:
 	int blockWidth, blockHeight, offsetX, offsetY;
-	Color*** table;
-	Color** imageBuffer;
+	Color** table; //array of pointers to data from screen. 2D array converted into 1D table[width*height] instead of [height][width]
+	Color* imageBuffer; //array to colors; 
 	Texture2D texture;
 	bool imageCreated;
 	void createBorders();

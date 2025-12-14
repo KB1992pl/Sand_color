@@ -8,6 +8,9 @@ SandBlock::SandBlock(int blockWidth, //block of sand width
 	int frameWidth, //drawing area width - for calculation whether block should be smaller than requested
 	int frameHeight)
 {
+	this->image.data = NULL;
+	this->texture.id = -1;
+
 	this->imageCreated = false;
 	this->blockWidth = blockWidth;
 	this->blockHeight = blockHeight;
@@ -24,29 +27,20 @@ SandBlock::SandBlock(int blockWidth, //block of sand width
 	}
 
 	// create 2D array with pointers
-	this->table = new Color **[this->blockHeight];
-	for (int ii = 0; ii < this->blockHeight; ii++)
-	{
-		this->table[ii] = new Color*[this->blockWidth];
-	}
+	this->table = new Color *[this->blockHeight * this->blockWidth];
 
 	// copy pointers
 	for (int row = 0; row < this->blockHeight; row++)
 	{
 		for (int col = 0; col < this->blockWidth; col++)
 		{
-			this->table[row][col] =  &(frame[offsetY + row][offsetX + col]);
+			this->table[row* this->blockWidth + col] =  &(frame[offsetY+row]  [offsetX + col]);
 		}
 	}
 
 	//create buffer for image
-	this->imageBuffer = new Color *[this->blockHeight];
-	for (int ii = 0; ii < this->blockHeight; ii++)
-	{
-		this->imageBuffer[ii] = new Color [this->blockWidth];
-	}
+	this->imageBuffer = new Color [this->blockHeight * this->blockWidth];
 
-	//this->createBorders();
 }
 
 void SandBlock::render()
@@ -55,10 +49,9 @@ void SandBlock::render()
 	{
 		for (unsigned col = 0; col < this->blockWidth; col++)
 		{
-			if (this-> table[row][col]->a)
+			if (this-> table[row * this->blockWidth + col]->a)
 			{
-				Color *color{ this->table[row][col] };
-				DrawPixel(this->offsetX + col, offsetY + row, *color);
+				DrawPixel(this->offsetX + col, offsetY + row, *this->table[row * this->blockWidth + col]);
 			}
 		}
 	}
@@ -76,17 +69,6 @@ void SandBlock::render()
 	}
 }
 
-void SandBlock::createBorders()
-{
-	for (unsigned row = 0; row < this->blockHeight; row++)
-	{
-		for (unsigned col = 0; col < this->blockWidth; col++)
-		{
-			Color* c{ this->table[row][col] };
-			*c = BLACK;
-		}
-	}
-}
 bool SandBlock::isBlockFull()
 {
 	bool retVal = true;
@@ -94,7 +76,7 @@ bool SandBlock::isBlockFull()
 	{
 		for (unsigned col = 0; col < this->blockWidth; col++)
 		{
-			Color* c{ this->table[row][col] };
+			Color* c{ this->table[row * this->blockWidth + col] };
 			if (c->a == 0)
 			{
 				return false;
@@ -110,8 +92,8 @@ void SandBlock::createImage()
 	{
 		for (unsigned col = 0; col < this->blockWidth; col++)
 		{
-			Color* c{ this->table[row][col] };
-			this->imageBuffer[row][col] = *c ;
+			Color* c{ this->table[row * this->blockWidth + col] };
+			this->imageBuffer[row * this->blockWidth + col] = *c ;
 		}
 	}
 	this->imageCreated = true;

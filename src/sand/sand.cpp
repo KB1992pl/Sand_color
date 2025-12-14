@@ -22,7 +22,7 @@ Sand::Sand(Vector2 upperRight, float height, float width)
 
 Sand::~Sand()
 {
-	for (unsigned ii = 0; ii < this->rowCount; ii++)
+	for (int ii = 0; ii < this->rowCount; ii++)
 	{
 		delete[] this->table[ii];
 	}
@@ -32,7 +32,6 @@ Sand::~Sand()
 void Sand::generateSand(Vector2 position, Color color, int radius)
 {
 	Color outputColor;
-	int rDelta, gDelta, bDelta, aDelta=0;
 	if (radius == 0)
 	{
 		return;
@@ -80,9 +79,9 @@ void Sand::generateSand(Vector2 position, Color color, int radius)
 }
 void Sand::simulate()
 {
-	for (unsigned row = this->rowCount - 2; row > 0; row--)
+	for (int row = this->rowCount - 2; row > 0; row--)
 	{
-		for (unsigned col = 0; col < this->colCount; col++)
+		for (int col = 0; col < this->colCount; col++)
 		{
 			if (this->table[row][col].a!=0)
 			{
@@ -122,9 +121,9 @@ void Sand::render()
 	this->pixels = 0;
 	const unsigned xOffset = static_cast<unsigned>(this->upperRight.x);
 	const unsigned yOffset = static_cast<unsigned>(this->upperRight.y);
-	for (unsigned row = 0; row < this->rowCount; row++)
+	for (int row = 0; row < this->rowCount; row++)
 	{
-		for (unsigned col = 0; col < this->colCount; col++)
+		for (int col = 0; col < this->colCount; col++)
 		{
 			if (this->table[row][col].a)
 			{
@@ -138,9 +137,9 @@ void Sand::render()
 
 void Sand::resetTable()
 {
-	for (unsigned row = 0; row < this->rowCount; row++)
+	for (int row = 0; row < this->rowCount; row++)
 	{
-		for (unsigned col = 0; col < this->colCount; col++)
+		for (int col = 0; col < this->colCount; col++)
 		{
 			this->table[row][col].a = 0;
 		}
