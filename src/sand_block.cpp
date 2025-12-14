@@ -13,6 +13,7 @@ SandBlock::SandBlock(int blockWidth, //block of sand width
 	this->needToSimulate = false;
 	this->neighborSimulate = false;
 	this->imageCreated = false;
+	this->blockFull = false;
 	
 	this->blockWidth = blockWidth;
 	this->blockHeight = blockHeight;
@@ -47,33 +48,35 @@ SandBlock::SandBlock(int blockWidth, //block of sand width
 
 void SandBlock::render()
 {
-	for (int row = 0; row < this->blockHeight; row++)
-	{
-		for (int col = 0; col < this->blockWidth; col++)
-		{
-			if (this-> table[row * this->blockWidth + col]->a)
-			{
-				DrawPixel(this->offsetX + col, offsetY + row, *this->table[row * this->blockWidth + col]);
-			}
-		}
-	}
-	if (this->isBlockFull())
+	if (this->blockFull)
 	{
 		if (!this->imageCreated)
 		{
 			this->createImage();
 			this->texture = LoadTextureFromImage(image);
 		}
+		if (this->imageCreated)
+		{
+			DrawTexture(this->texture, this->offsetX, offsetY, WHITE);
+		}
 	}
-	if (this->imageCreated)
+	else
 	{
-		DrawTexture(this->texture, 200, 200, WHITE);
+		for (int row = 0; row < this->blockHeight; row++)
+		{
+			for (int col = 0; col < this->blockWidth; col++)
+			{
+				if (this->table[row * this->blockWidth + col]->a)
+				{
+					DrawPixel(this->offsetX + col, offsetY + row, *this->table[row * this->blockWidth + col]);
+				}
+			}
+		}
 	}
 }
 
-bool SandBlock::isBlockFull()
+void SandBlock::checkBlockFull()
 {
-	bool retVal = true;
 	for (int row = 0; row < this->blockHeight; row++)
 	{
 		for (int col = 0; col < this->blockWidth; col++)
@@ -81,11 +84,12 @@ bool SandBlock::isBlockFull()
 			Color* c{ this->table[row * this->blockWidth + col] };
 			if (c->a == 0)
 			{
-				return false;
+				this->blockFull = false;
+				return;
 			}
 		}
 	}
-	return true;
+	this->blockFull =true;
 }
 
 void SandBlock::createImage()

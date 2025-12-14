@@ -122,6 +122,10 @@ void Sand::simulate()
 					//Can be changed for more performance
 					this->setNeighborSimulateFlag(blockCol, blockRow);
 				}
+				else
+				{
+					this->block[blockRow][blockCol]->checkBlockFull();
+				}
 			}
 		}
 	}
@@ -130,6 +134,15 @@ void Sand::simulate()
 
 void Sand::render()
 {
+	for (int blockRow = this->blockRowCount - 1; blockRow >= 0; blockRow--)
+	{
+		for (int blockCol = 0; blockCol < this->blockColCount; blockCol++)
+		{
+			this->block[blockRow][blockCol]->render();
+		}
+	}
+
+	/*
 	this->pixels = 0;
 	const unsigned xOffset = static_cast<unsigned>(this->upperRight.x);
 	const unsigned yOffset = static_cast<unsigned>(this->upperRight.y);
@@ -145,6 +158,7 @@ void Sand::render()
 			}
 		}
 	}
+	*/
 }
 
 void Sand::resetTable()

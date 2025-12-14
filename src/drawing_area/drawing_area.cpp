@@ -16,8 +16,8 @@ DrawingArea::DrawingArea(Vector2 upperRight, float height, float width)
 
 bool DrawingArea::isMouseOnObj(Vector2 mouseCoords)
 {
-	const Vector2 upperRight = this->GetUpperRight();
-	const Vector2 lowerLeft = this->GetLowerLeft();
+	const Vector2 upperRight = this->GetUpperLeft();
+	const Vector2 lowerLeft = this->GetLowerRight();
 	if ((mouseCoords.x >= upperRight.x) && (mouseCoords.x <= lowerLeft.x))
 	{
 		if ((mouseCoords.y >= upperRight.y) && (mouseCoords.y <= lowerLeft.y))

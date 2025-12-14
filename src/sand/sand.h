@@ -10,8 +10,8 @@ private:
 	int colCount;
 
 	//variables for blocks - see sand_block.h
-	const int blockWidth =50;
-	const int blockHeight = 50;
+	const int blockWidth =100;
+	const int blockHeight = 100;
 	int blockRowCount;
 	int blockColCount;
 	// 2d array of sand blocks

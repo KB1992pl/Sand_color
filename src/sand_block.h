@@ -10,17 +10,17 @@ private:
 	Texture2D texture;
 	bool imageCreated;
 	void createBorders();
-	bool isBlockFull();
+	
 	void createImage(); //creates image from current bytes
 
-	bool bottomBlock; //indicates that this is lowest block - sand cannot fall down from this block
-	bool leftBlock; //indicates that this is most left block
-	bool rightBlock; //indicates that this is most right block
+	bool blockFull;
 public:
 	int blockWidth, blockHeight, offsetX, offsetY;
 	Image image;
 	bool needToSimulate;
 	bool neighborSimulate; //indicades that neighbor block runs it simulation
+
+	void checkBlockFull(); //updates blockFull and blockEmpty variables
 
 	SandBlock(int blockWidth, //block of sand width 
 		int blockHeight, //block of sand height
