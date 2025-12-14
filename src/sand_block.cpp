@@ -10,8 +10,10 @@ SandBlock::SandBlock(int blockWidth, //block of sand width
 {
 	this->image.data = NULL;
 	this->texture.id = -1;
-
+	this->needToSimulate = false;
+	this->neighborSimulate = false;
 	this->imageCreated = false;
+	
 	this->blockWidth = blockWidth;
 	this->blockHeight = blockHeight;
 	this->offsetX = offsetX;
@@ -45,9 +47,9 @@ SandBlock::SandBlock(int blockWidth, //block of sand width
 
 void SandBlock::render()
 {
-	for (unsigned row = 0; row < this->blockHeight; row++)
+	for (int row = 0; row < this->blockHeight; row++)
 	{
-		for (unsigned col = 0; col < this->blockWidth; col++)
+		for (int col = 0; col < this->blockWidth; col++)
 		{
 			if (this-> table[row * this->blockWidth + col]->a)
 			{
@@ -72,9 +74,9 @@ void SandBlock::render()
 bool SandBlock::isBlockFull()
 {
 	bool retVal = true;
-	for (unsigned row = 0; row < this->blockHeight; row++)
+	for (int row = 0; row < this->blockHeight; row++)
 	{
-		for (unsigned col = 0; col < this->blockWidth; col++)
+		for (int col = 0; col < this->blockWidth; col++)
 		{
 			Color* c{ this->table[row * this->blockWidth + col] };
 			if (c->a == 0)
@@ -88,9 +90,9 @@ bool SandBlock::isBlockFull()
 
 void SandBlock::createImage()
 {
-	for (unsigned row = 0; row < this->blockHeight; row++)
+	for (int row = 0; row < this->blockHeight; row++)
 	{
-		for (unsigned col = 0; col < this->blockWidth; col++)
+		for (int col = 0; col < this->blockWidth; col++)
 		{
 			Color* c{ this->table[row * this->blockWidth + col] };
 			this->imageBuffer[row * this->blockWidth + col] = *c ;

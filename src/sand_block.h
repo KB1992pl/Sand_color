@@ -5,7 +5,6 @@
 class SandBlock :public DrawableObj
 {
 private:
-	int blockWidth, blockHeight, offsetX, offsetY;
 	Color** table; //array of pointers to data from screen. 2D array converted into 1D table[width*height] instead of [height][width]
 	Color* imageBuffer; //array to colors; 
 	Texture2D texture;
@@ -13,8 +12,16 @@ private:
 	void createBorders();
 	bool isBlockFull();
 	void createImage(); //creates image from current bytes
+
+	bool bottomBlock; //indicates that this is lowest block - sand cannot fall down from this block
+	bool leftBlock; //indicates that this is most left block
+	bool rightBlock; //indicates that this is most right block
 public:
+	int blockWidth, blockHeight, offsetX, offsetY;
 	Image image;
+	bool needToSimulate;
+	bool neighborSimulate; //indicades that neighbor block runs it simulation
+
 	SandBlock(int blockWidth, //block of sand width 
 		int blockHeight, //block of sand height
 		int offsetX, //offsetX on drawing area
@@ -26,4 +33,5 @@ public:
 
 	virtual void render();
 	virtual bool isMouseOnObj(Vector2 mouseCoords) { return false; };
+	void simulate(); //simulate sand inside block
 };
