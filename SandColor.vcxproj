@@ -130,6 +130,7 @@
     <ClCompile Include="src\drawing_area\drawing_area.cpp" />
     <ClCompile Include="src\file_parsers\optionParser.cpp" />
     <ClCompile Include="src\sand\sand.cpp" />
+    <ClCompile Include="src\sand_block.cpp" />
     <ClCompile Include="src\ui\ui.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -138,6 +139,7 @@
     <ClInclude Include="src\drawing_area\drawing_area.h" />
     <ClInclude Include="src\file_parsers\optionParser.h" />
     <ClInclude Include="src\sand\sand.h" />
+    <ClInclude Include="src\sand_block.h" />
     <ClInclude Include="src\ui\ui.h" />
     <ClInclude Include="src\utils.h" />
   </ItemGroup>

@@ -1,15 +1,17 @@
 #pragma once
 #include"../drawableObj.h"
+#include"../sand_block.h"
 
 
 class Sand : public DrawableObj
 {
 private:
-	unsigned rowCount;
-	unsigned colCount;
+	int rowCount;
+	int colCount;
 	Color** table; // 2d array; accessing is: table[rowNo][ColNo]
 	Vector2 upperRight;
 	Vector2 lowerLeft;
+	SandBlock* block;
 public:
 	Sand(Vector2 upperRight, float height, float width);
 	~Sand();

@@ -5,18 +5,19 @@
 
 Sand::Sand(Vector2 upperRight, float height, float width)
 {
-	this->rowCount = (unsigned)height;
-	this->colCount = (unsigned)width;
-	this->table = new Color * [(unsigned)height];
+	this->rowCount = (int)height;
+	this->colCount = (int)width;
+	this->table = new Color * [this->rowCount];
 	for (unsigned ii = 0; ii < height; ii++)
 	{
-		table[ii] = new Color[(unsigned)width];
+		table[ii] = new Color[this->colCount];
 	}
 	this->upperRight = upperRight;
 	this->lowerLeft.x = this->upperRight.x + width;
 	this->lowerLeft.y = this->upperRight.y + height;
 
 	this->resetTable();
+	this->block = new SandBlock(50, 50, 0, 0, this->table, this->colCount, this->rowCount);
 }
 
 Sand::~Sand()
@@ -116,6 +117,8 @@ void Sand::simulate()
 
 void Sand::render()
 {
+	this->block->render();
+
 	this->pixels = 0;
 	const unsigned xOffset = static_cast<unsigned>(this->upperRight.x);
 	const unsigned yOffset = static_cast<unsigned>(this->upperRight.y);
