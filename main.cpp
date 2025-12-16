@@ -2,6 +2,17 @@
 #include "globals.h"
 #include<string>
 
+
+/*
+Things to do:
+- change simulation: maybe add second pixel array and do simulation by swaping pixel arrays. Currently
+it have some weird behavior due to drawing area divided into blocks
+- textures should be re-created and reloaded if draw sand inside texture. Currently there is no check
+if some drawing occured inside full block
+- readjust offset so sand is falling from the cursor, not somewhere else (when drawing border is not
+aligned with window)
+*/
+
 #define DEBUG_PRINT 1
 
 #if DEBUG_PRINT

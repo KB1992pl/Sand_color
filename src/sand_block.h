@@ -13,8 +13,10 @@ private:
 	
 	void createImage(); //creates image from current bytes
 
-	bool blockFull;
+	
 public:
+	bool blockFull, blockEmpty;
+	long pixels; //how many pixels are in block. Debug purpose only
 	int blockWidth, blockHeight, offsetX, offsetY;
 	Image image;
 	bool needToSimulate;

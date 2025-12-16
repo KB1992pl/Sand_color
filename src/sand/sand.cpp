@@ -59,6 +59,7 @@ void Sand::generateSand(Vector2 position, Color color, int radius)
 	this->getBlockCoordinates(position, &blockRow, &blockCol);
 	//this algorithm will work only for brush radius lower than half of blockwidth or block height.
 	this->block[blockRow][blockCol]->needToSimulate = true;
+	this->block[blockRow][blockCol]->blockEmpty = false;
 	this->setNeighborSimulateFlag(blockCol, blockRow);
 
 
@@ -111,10 +112,12 @@ void Sand::simulate()
 				this->block[blockRow][blockCol]->needToSimulate = false;
 				this->block[blockRow][blockCol]->neighborSimulate = false;
 				bool needSimulation = simulateBlock(blockCol, blockRow); // another simulation is needed?
+				
 				if (needSimulation)
 				{
 					//set current block simulation flag to true
 					this->block[blockRow][blockCol]->needToSimulate = true;
+
 
 					//set neighbor block simulation flag to true
 					//for falling we could skip blocks above, but for future use 
@@ -134,31 +137,15 @@ void Sand::simulate()
 
 void Sand::render()
 {
+	this->pixels = 0;
 	for (int blockRow = this->blockRowCount - 1; blockRow >= 0; blockRow--)
 	{
 		for (int blockCol = 0; blockCol < this->blockColCount; blockCol++)
 		{
 			this->block[blockRow][blockCol]->render();
+			this->pixels += this->block[blockRow][blockCol]->pixels;
 		}
 	}
-
-	/*
-	this->pixels = 0;
-	const unsigned xOffset = static_cast<unsigned>(this->upperRight.x);
-	const unsigned yOffset = static_cast<unsigned>(this->upperRight.y);
-	for (int row = 0; row < this->rowCount; row++)
-	{
-		for (int col = 0; col < this->colCount; col++)
-		{
-			if (this->table[row][col].a)
-			{
-				Color color{ this->table[row][col] };
-				this->pixels++;
-				DrawPixel(xOffset + col, yOffset+ row, color);
-			}
-		}
-	}
-	*/
 }
 
 void Sand::resetTable()
@@ -313,6 +300,26 @@ void Sand::setNeighborSimulateFlag(int blockCol, int blockRow)
 				continue;
 			}
 			this->block[blockRow + blockY][blockCol + blockX]->neighborSimulate = true;
+			this->block[blockRow + blockY][blockCol + blockX]->blockEmpty = false;
+		}
+	}
+}
+
+void Sand::legacyRender()
+{
+	this->pixels = 0;
+	const unsigned xOffset = static_cast<unsigned>(this->upperRight.x);
+	const unsigned yOffset = static_cast<unsigned>(this->upperRight.y);
+	for (int row = 0; row < this->rowCount; row++)
+	{
+		for (int col = 0; col < this->colCount; col++)
+		{
+			if (this->table[row][col].a)
+			{
+				Color color{ this->table[row][col] };
+				this->pixels++;
+				DrawPixel(xOffset + col, yOffset + row, color);
+			}
 		}
 	}
 }

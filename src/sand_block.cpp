@@ -14,6 +14,7 @@ SandBlock::SandBlock(int blockWidth, //block of sand width
 	this->neighborSimulate = false;
 	this->imageCreated = false;
 	this->blockFull = false;
+	this->blockEmpty = true;
 	
 	this->blockWidth = blockWidth;
 	this->blockHeight = blockHeight;
@@ -48,8 +49,15 @@ SandBlock::SandBlock(int blockWidth, //block of sand width
 
 void SandBlock::render()
 {
+	this->pixels = 0;
+	if (this->blockEmpty)
+	{
+		//nothing to draw
+		return;
+	}
 	if (this->blockFull)
 	{
+		//this->pixels = this->blockWidth * this->blockHeight; //???
 		if (!this->imageCreated)
 		{
 			this->createImage();
@@ -69,14 +77,19 @@ void SandBlock::render()
 				if (this->table[row * this->blockWidth + col]->a)
 				{
 					DrawPixel(this->offsetX + col, offsetY + row, *this->table[row * this->blockWidth + col]);
+					this->pixels++;
 				}
 			}
 		}
 	}
 }
 
+
+
 void SandBlock::checkBlockFull()
 {
+	this->blockFull = true;
+	this->blockEmpty = true;
 	for (int row = 0; row < this->blockHeight; row++)
 	{
 		for (int col = 0; col < this->blockWidth; col++)
@@ -84,12 +97,20 @@ void SandBlock::checkBlockFull()
 			Color* c{ this->table[row * this->blockWidth + col] };
 			if (c->a == 0)
 			{
+				// at least one lacking pixel means that block is not full
 				this->blockFull = false;
+			}
+			else
+			{
+				// at least one pixel means that block is not empty
+				this->blockEmpty = false;
+			}
+			if ((!this->blockFull) && (!this->blockEmpty))
+			{
 				return;
 			}
 		}
 	}
-	this->blockFull =true;
 }
 
 void SandBlock::createImage()

@@ -26,6 +26,7 @@ private:
 
 	// first method of simulate - saved just for performance comparison
 	void legacySimulate();
+	void legacyRender();
 
 	bool simulateBlock(int offsetX, int offsetY); //return true if simulation was performed
 	void setNeighborSimulateFlag(int blockCol, int blockRow);
